@@ -1,19 +1,20 @@
 """
-Saving Card Class
+Credit Card Class
 """
 import BankTime
 import Trade
 
 
-class SavingCard:
+class CreditCard:
     account_name = ""
     balance = 0.0
+    credit = 0.0
     annual_fee = 0
     rate = 0.0
     daily_sum = 0
     trades = []
 
-    def __init__(self, account_name, balance, annual_fee, rate, create_date):
+    def __init__(self, account_name, balance, credit, annual_fee, rate, create_date):
         """Init account name"""
         # check valid
         if annual_fee < 0:
@@ -22,12 +23,15 @@ class SavingCard:
             raise Exception("Invalid rate!", rate)
         if balance < 0:
             raise Exception("Invalid balance!", balance)
+        if credit < 0:
+            raise Exception("Invalid credit!", credit)
 
         # init members
         self.annual_fee = annual_fee
         self.balance = balance
         self.account_name = account_name
         self.rate = rate
+        self.credit = credit
 
         try:
             self.create_date = BankTime.BankDate(create_date)
@@ -72,9 +76,10 @@ class SavingCard:
         # todo: leap year
         interest = self.daily_sum / 365 * self.rate
         settle_trade = Trade.Trade(st_date, interest, "Settle Interest")
-        self.deposit(settle_trade)
+        self.withdraw(settle_trade)
 
     def pay_annual_fee(self, pay_date):
         self.flash_sum(pay_date)
         annual_fee_trade = Trade.Trade(pay_date, self.annual_fee, "pay annual fee")
         self.withdraw(annual_fee_trade)
+

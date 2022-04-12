@@ -3,3 +3,6 @@ class Trade:
         self.date_ = date_
         self.amount = amount
         self.desc = desc
+
+    def get_info(self):
+        pass
