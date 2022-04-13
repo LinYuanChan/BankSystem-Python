@@ -90,3 +90,19 @@ class CreditCard:
         annual_fee_trade = Trade.Trade(pay_date, self.annual_fee, "pay annual fee")
         self.withdraw(annual_fee_trade)
 
+    def monthly_income(self, query_date):
+        ret = 0
+        for trade in self.trades:
+            if trade.date_.year == query_date.year and trade.date_.month == query_date.month:
+                if trade.trade_type == "deposit":
+                    ret += trade.amount
+        return ret
+
+    def monthly_expand(self, query_date):
+        ret = 0
+        for trade in self.trades:
+            if trade.date_.year == query_date.year and trade.date_.month == query_date.month:
+                if trade.trade_type == "withdraw":
+                    ret += trade.amount
+        return ret
+

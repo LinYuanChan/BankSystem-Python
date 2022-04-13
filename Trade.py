@@ -1,6 +1,7 @@
 class Trade:
-    def __init__(self, date_, amount, desc):
+    def __init__(self, date_, amount, trade_type, desc):
         self.date_ = date_
+        self.trade_type = trade_type
         self.amount = amount
         self.desc = desc
 
