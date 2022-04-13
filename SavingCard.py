@@ -31,9 +31,9 @@ class SavingCard:
 
         try:
             self.create_date = BankTime.BankDate(create_date)
+            self.last_date = create_date
         except BaseException:
             raise Exception("Invalid date format")
-        self.last_date = create_date
 
     def flash_sum(self, new_date):
         delta_day = new_date.cal_delta_day(self.create_date)
@@ -44,7 +44,7 @@ class SavingCard:
         """Deposit func"""
         if trade.amount < 0:
             raise Exception("Amount < 0")
-        if isinstance(trade.amount, int) != True:
+        if not isinstance(trade.amount, int):
             raise Exception("Amount Type Error!")
         self.flash_sum(trade.date_)
         self.balance += trade.amount
@@ -63,16 +63,23 @@ class SavingCard:
     def query(self, st_date):
         ret = []
         for cur in self.trades:
-            if(cur.date_.cal_delta_day(st_date) > 0):
+            if cur.date_.cal_delta_day(st_date) > 0:
                 ret.append(cur.get_info())
         return ret
 
     def settle(self, st_date):
         self.flash_sum(st_date)
-        # todo: leap year
-        interest = self.daily_sum / 365 * self.rate
+        if st_date.is_leap():
+            interest = self.daily_sum / 366 * self.rate
+        else:
+            interest = self.daily_sum / 365 * self.rate
         settle_trade = Trade.Trade(st_date, interest, "Settle Interest")
         self.deposit(settle_trade)
+
+        delta_year = st_date.year - self.last_date.year
+        if delta_year:
+            for i in range(delta_year):
+                self.pay_annual_fee(BankTime.BankDate(str(i + 1) + "/1/1"))
 
     def pay_annual_fee(self, pay_date):
         self.flash_sum(pay_date)

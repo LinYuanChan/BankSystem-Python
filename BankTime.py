@@ -19,8 +19,7 @@ class BankDate:
             self.day = int(args[2])
             self.date = _datetime.date(self.year, self.month, self.day)
         except BaseException:
-            raise Exception("Invalid date format")
-
+            raise
 
     def is_leap(self):
         # judge if a year is leap year
