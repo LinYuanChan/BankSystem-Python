@@ -5,4 +5,5 @@ class Trade:
         self.desc = desc
 
     def get_info(self):
-        pass
+        ret = self.date_ + "\t" + str(self.amount) + "\t" + self.desc
+        return ret
